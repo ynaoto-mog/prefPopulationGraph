@@ -32,7 +32,8 @@ export default {
         title: {
           text: "population"
         }
-      }
+      },
+      selies: []
     }
   }),
   methods: {
@@ -43,7 +44,19 @@ export default {
       );
       const prefData = await axios.get("/prefectures");
       const prefName = prefData.data.result[prefCode - 1].prefName;
-      const popList = graphData.data.result.data[0].data;
+      const prefDatas = graphData.data.result.data[0].data; //{year populations}
+      const popList = []; //from 1960 to 2045
+      console.log(prefDatas);
+      prefDatas.forEach(element => {
+        if (
+          element.year <= 2020 &&
+          element.year >= 1980 &&
+          element.year % 10 === 0
+        ) {
+          popList.push(element.value);
+        }
+      });
+      popList.push(prefDatas.value);
       if (
         this.graphOption.indexOf({ prefName: prefName, popList: popList }) ===
         -1
@@ -53,7 +66,20 @@ export default {
           popList: popList
         });
       }
-      console.log(this.graphOption);
+      if (
+        this.options.selies.indexOf({
+          name: prefName,
+          type: "line",
+          data: popList
+        }) === -1
+      ) {
+        this.options.selies.push({
+          name: prefName,
+          type: "line",
+          data: popList
+        });
+      }
+      console.log(this.options.selies);
     }
   },
   watch: {
@@ -61,6 +87,7 @@ export default {
       console.log(newPrefs);
       const prefsLength = newPrefs.length;
       this.graphOption = [];
+      this.options.selies = [];
       for (let step = 0; step < prefsLength; step++) {
         this.makeGraphData(newPrefs[step]);
       }
