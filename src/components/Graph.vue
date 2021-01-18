@@ -1,11 +1,12 @@
 <template>
   <div class="graph">
-    {{ graphOption }}
+    <div id="graphItself"></div>
   </div>
 </template>
 
 <script>
 import axios from "../axios-setting";
+import Highchart from "highcharts";
 export default {
   name: "Graph",
   props: {
@@ -33,7 +34,7 @@ export default {
           text: "population"
         }
       },
-      selies: []
+      series: []
     }
   }),
   methods: {
@@ -67,30 +68,42 @@ export default {
         });
       }
       if (
-        this.options.selies.indexOf({
+        this.options.series.indexOf({
           name: prefName,
           type: "line",
           data: popList
         }) === -1
       ) {
-        this.options.selies.push({
+        this.options.series.push({
           name: prefName,
           type: "line",
           data: popList
         });
       }
-      console.log(this.options.selies);
     }
   },
   watch: {
-    prefs: function(newPrefs) {
+    prefs: async function(newPrefs) {
       console.log(newPrefs);
       const prefsLength = newPrefs.length;
       this.graphOption = [];
-      this.options.selies = [];
+      this.options.series = [];
       for (let step = 0; step < prefsLength; step++) {
-        this.makeGraphData(newPrefs[step]);
+        await this.makeGraphData(newPrefs[step]);
       }
+      console.log(this.options.title);
+      console.log(this.options.xAxis.categories);
+      console.log(this.options.yAxis.title.text);
+      console.log(this.options.series);
+      Highchart.chart({
+        chart: {
+          renderTo: "graphItself"
+        },
+        title: this.options.title,
+        xAxis: { categories: [1980, 1990, 2000, 2010, 2020] },
+        yAxis: [{ title: this.options.yAxis.title.text }],
+        series: this.options.series
+      });
     }
   }
 };
