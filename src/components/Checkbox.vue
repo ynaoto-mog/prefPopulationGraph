@@ -11,19 +11,18 @@
 <script>
 import axios from "../axios-setting";
 import Graph from "./Graph.vue";
-
 export default {
   name: "Checkbox",
   data: () => ({
-    prefs: [],
-    displayPrefs: []
+    prefs: [], //全体の都道府県データをAPIから取得
+    displayPrefs: [] //県コードを格納
   }),
   components: {
     graph: Graph
   },
   async mounted() {
-    const prefsData = await axios.get("/prefectures"); //axiosSettingsでBaseUrlを設定。
-    this.prefs = prefsData.data.result; //都道府県のデータを取得。
+    const prefsData = await axios.get("/prefectures"); //axiosSettingsでBaseUrlを設定済み。
+    this.prefs = prefsData.data.result;
   }
 };
 </script>

@@ -18,36 +18,20 @@ export default {
     }
   },
   data: () => ({
-    graphOption: [],
-    options: {
-      chart: {
-        type: "line"
-      },
-      title: {
-        text: "Population transition"
-      },
-      xAxis: {
-        categories: [1980, 1990, 2000, 2010, 2020]
-      },
-      yAxis: {
-        title: {
-          text: "population"
-        }
-      },
-      series: []
-    }
+    series: []
   }),
   methods: {
+    //一つの都道府県のグラフに必要なデータを作成するメソッド
     async makeGraphData(prefCode) {
       const graphData = await axios.get(
         "/population/composition/perYear?cityCode=-&prefCode=" +
           prefCode.toString()
       );
       const prefData = await axios.get("/prefectures");
-      const prefName = prefData.data.result[prefCode - 1].prefName;
-      const prefDatas = graphData.data.result.data[0].data; //{year populations}
-      const popList = []; //from 1960 to 2045
-      console.log(prefDatas);
+      const prefName = prefData.data.result[prefCode - 1].prefName; //県名を定義
+      const prefDatas = graphData.data.result.data[0].data; //{year:--,value:--}が並ぶ
+      const popList = [];
+      //1980年から2020年の人口推移を10年ごとに取得
       prefDatas.forEach(element => {
         if (
           element.year <= 2020 &&
@@ -57,24 +41,17 @@ export default {
           popList.push(element.value);
         }
       });
+      //人数のリストをpopListに格納
       popList.push(prefDatas.value);
+      //もしseries内に同じデータがなければ、県名、タイプ、データを格納
       if (
-        this.graphOption.indexOf({ prefName: prefName, popList: popList }) ===
-        -1
-      ) {
-        this.graphOption.push({
-          prefName: prefName,
-          popList: popList
-        });
-      }
-      if (
-        this.options.series.indexOf({
+        this.series.indexOf({
           name: prefName,
           type: "line",
           data: popList
         }) === -1
       ) {
-        this.options.series.push({
+        this.series.push({
           name: prefName,
           type: "line",
           data: popList
@@ -84,25 +61,21 @@ export default {
   },
   watch: {
     prefs: async function(newPrefs) {
-      console.log(newPrefs);
       const prefsLength = newPrefs.length;
-      this.graphOption = [];
-      this.options.series = [];
+      this.series = [];
+      //選択した都道府県の数だけmakeGraphDataを実行。newPrefsはprefCodeが入ったリスト。
       for (let step = 0; step < prefsLength; step++) {
         await this.makeGraphData(newPrefs[step]);
       }
-      console.log(this.options.title);
-      console.log(this.options.xAxis.categories);
-      console.log(this.options.yAxis.title.text);
-      console.log(this.options.series);
+      //作成したデータをグラフとして表示。
       Highchart.chart({
         chart: {
           renderTo: "graphItself"
         },
-        title: this.options.title,
+        title: "Population transition",
         xAxis: { categories: [1980, 1990, 2000, 2010, 2020] },
-        yAxis: [{ title: this.options.yAxis.title.text }],
-        series: this.options.series
+        yAxis: "population",
+        series: this.series
       });
     }
   }
