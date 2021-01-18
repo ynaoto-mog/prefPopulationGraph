@@ -1,9 +1,9 @@
 import axiosBase from "axios";
-import key from "./key-setting";
+
 const axios = axiosBase.create({
   baseURL: "https://opendata.resas-portal.go.jp/api/v1",
   headers: {
-    "X-API-KEY": key
+    "X-API-KEY": process.env.VUE_APP_API_KEY
   },
   responseType: "json"
 });
