@@ -1,23 +1,18 @@
 <template>
   <div class="checkBox">
     <div class="checkBoxSection" v-for="pref in prefs" v-bind:key="pref">
-      <input
-        type="checkbox"
-        v-model="displayPrefs[pref.prefCode - 1]"
-        :value="pref.prefCode"
-        v-on:input="checkPref(pref.prefCode)"
-      />
-      {{ pref.prefName }}
+      <input type="checkbox" v-model="displayPrefs" :value="pref.prefCode" />
+      <div class="prefNameInCheckbox">{{ pref.prefName }}</div>
     </div>
-    <graph v-bind:prefs="displayPrefs" />
+    <graph v-bind:prefs="displayPrefs" ref="graph" />
   </div>
 </template>
 
-<script lang="js">
+<script>
 import axios from "../axios-setting";
 import Graph from "./Graph.vue";
 
-export default({
+export default {
   name: "Checkbox",
   data: () => ({
     prefs: [],
@@ -26,16 +21,15 @@ export default({
   components: {
     graph: Graph
   },
-  methods: {
-    checkPref(){
-      console.log(this.displayPrefs);
-    }
-  },
   async mounted() {
     const prefsData = await axios.get("/prefectures"); //axiosSettingsでBaseUrlを設定。
     this.prefs = prefsData.data.result; //都道府県のデータを取得。
   }
-});
+};
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.prefNameInCheckbox {
+  float: left;
+}
+</style>
