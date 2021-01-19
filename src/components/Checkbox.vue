@@ -1,17 +1,22 @@
 <template>
   <div class="checkBox">
     <div class="checkBoxCover" v-if="coverIf"></div>
-    <p class="NowLoading" v-if="coverIf">Loading...</p>
-    <p class="checkBoxTitle">各都道府県の人口推移</p>
+    <div class="NowLoading" v-if="coverIf">Now Loading...</div>
+    <p class="checkBoxTitle">
+      各都道府県の人口推移(チェックでグラフが出ます。)
+    </p>
+    <hr />
     <p class="checkBoxSubTitle">都道府県</p>
-    <div class="checkBoxSection" v-for="pref in prefs" v-bind:key="pref">
-      <input
-        type="checkbox"
-        v-model="displayPrefs"
-        :value="pref.prefCode"
-        class="checkInCheck"
-      />
-      <div class="prefNameInCheckbox">{{ pref.prefName }}</div>
+    <div class="checkBoxSectionContainer">
+      <div class="checkBoxSection" v-for="pref in prefs" v-bind:key="pref">
+        <input
+          type="checkbox"
+          v-model="displayPrefs"
+          :value="pref.prefCode"
+          class="checkInCheck"
+        />
+        <div class="prefNameInCheckbox">{{ pref.prefName }}</div>
+      </div>
     </div>
     <graph
       v-bind:prefs="displayPrefs"
@@ -55,9 +60,21 @@ export default {
 .checkBox {
   max-width: 1024px;
   position: relative;
+  margin-left: auto;
+  margin-right: auto;
 }
 .checkBoxTitle {
   text-align: center;
+}
+.checkBoxSubTitle {
+  padding: 0.5em 1em;
+  margin: 2em 0;
+  width: 70px;
+  border: solid 1px #000000;
+}
+.checkBoxSectionContainer {
+  width: 90%;
+  margin-left: 12%;
 }
 .checkInCheck {
   float: left;
@@ -73,7 +90,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   z-index: 2;
   background-color: rgb(0, 0, 0);
   opacity: 0.5;
