@@ -74,8 +74,11 @@ export default {
           renderTo: "graphItself"
         },
         title: "Population transition",
-        xAxis: { categories: [1980, 1990, 2000, 2010, 2020] },
-        yAxis: "population",
+        xAxis: {
+          categories: [1980, 1990, 2000, 2010, 2020],
+          title: { text: "年度" }
+        },
+        yAxis: [{ title: { text: "人口数" } }],
         series: this.series
       });
       this.$emit("changeCovering");

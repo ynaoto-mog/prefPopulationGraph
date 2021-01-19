@@ -3,10 +3,10 @@
     <div class="checkBoxCover" v-if="coverIf"></div>
     <p class="checkBoxTitle">
       各都道府県の人口推移(チェックでグラフ出現)
-      <span class="NowLoading" v-if="coverIf">Now Loading...</span>
     </p>
     <hr />
-    <p class="checkBoxSubTitle">都道府県</p>
+    <p class="NowLoading checkBoxSubTitle" v-if="coverIf">Loading...</p>
+    <p class="checkBoxSubTitle" v-else>都道府県</p>
     <div class="checkBoxSectionContainer">
       <div class="checkBoxSection" v-for="pref in prefs" v-bind:key="pref">
         <input
@@ -71,8 +71,10 @@ export default {
   margin: 2em 0;
   width: 70px;
   border: solid 1px #000000;
+  float: left;
 }
 .checkBoxSectionContainer {
+  clear: both;
   width: 90%;
   margin-left: 10%;
 }
@@ -95,9 +97,7 @@ export default {
   left: 0;
 }
 .NowLoading {
-  text-align: center;
   z-index: 3;
-  position: absolute;
   color: red;
 }
 @media screen and (min-width: 768px) {
