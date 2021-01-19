@@ -61,6 +61,7 @@ export default {
   },
   watch: {
     prefs: async function(newPrefs) {
+      this.$emit("changeCovering", true);
       const prefsLength = newPrefs.length;
       this.series = [];
       //選択した都道府県の数だけmakeGraphDataを実行。newPrefsはprefCodeが入ったリスト。
@@ -77,9 +78,14 @@ export default {
         yAxis: "population",
         series: this.series
       });
+      this.$emit("changeCovering");
     }
   }
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.graph {
+  padding-top: 50px;
+}
+</style>
