@@ -1,9 +1,9 @@
 <template>
   <div class="checkBox">
     <div class="checkBoxCover" v-if="coverIf"></div>
-    <div class="NowLoading" v-if="coverIf">Now Loading...</div>
     <p class="checkBoxTitle">
-      各都道府県の人口推移(チェックでグラフが出ます。)
+      各都道府県の人口推移(チェックでグラフ出現)
+      <span class="NowLoading" v-if="coverIf">Now Loading...</span>
     </p>
     <hr />
     <p class="checkBoxSubTitle">都道府県</p>
@@ -74,7 +74,7 @@ export default {
 }
 .checkBoxSectionContainer {
   width: 90%;
-  margin-left: 12%;
+  margin-left: 10%;
 }
 .checkInCheck {
   float: left;
@@ -86,22 +86,19 @@ export default {
   clear: both;
 }
 .checkBoxCover {
+  width: 100%;
+  height: 150vh;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0);
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: 2;
-  background-color: rgb(0, 0, 0);
-  opacity: 0.5;
 }
 .NowLoading {
   text-align: center;
   z-index: 3;
-  color: white;
   position: absolute;
-  top: 45vh;
-  padding-left: 30%;
+  color: red;
 }
 @media screen and (min-width: 768px) {
   //タブレットより大きい＆スマートフォン横
